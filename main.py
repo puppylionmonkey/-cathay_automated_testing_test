@@ -1,7 +1,10 @@
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 
 from mobile_driver_config import driver, wait
+from scroll_function import scroll_down_until_element_visible_top
 
 
 def test_for_cathay():
@@ -32,3 +35,24 @@ def test_for_cathay():
 
     # 點擊卡片介紹
     driver.find_element(By.XPATH, credit_card_menu_xpath + " and contains(@class, 'mbOnly')]/parent::*//a[text()='卡片介紹']").click()
+
+    # 截圖
+    # 1. 找出所有anchor的id
+    anchor_id_element_list = driver.find_elements(By.XPATH, "//*[contains(@class, 'anchor')]//*[contains(@data-anchor-btn, 'blockname')]")
+    anchor_id_list = [anchor_id_element.get_attribute('data-anchor-btn') for anchor_id_element in anchor_id_element_list]
+    for anchor_id in anchor_id_list:
+        print(anchor_id)
+        driver.find_element(By.XPATH, "//*[contains(@class, 'anchor')]//*[@data-anchor-btn='" + anchor_id + "']").click()
+        time.sleep(2)  # todo: wait
+        # locator = (By.XPATH, "//*[contains(@class, 'anchor')]//*[@data-anchor-btn='" + anchor_id + "' and contains(@class, 'active')]")
+        # wait.until(expected_conditions.presence_of_element_located(locator))
+        # locator = (By.XPATH, "//section[@data-anchor-block='" + anchor_id + "']")
+        # wait.until(expected_conditions.visibility_of_element_located(locator))
+        # 將section移到畫面上方
+        section_xpath = "//section[@data-anchor-block='" + anchor_id + "']"
+        scroll_down_until_element_visible_top(section_xpath)
+        time.sleep(1)
+
+    # 2. 每個tab點了後，滑到最上面.
+    # 3. 點每一個slide
+    # 4. 確認當前title有沒有停發，如果有截圖
