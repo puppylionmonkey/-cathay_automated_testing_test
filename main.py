@@ -1,8 +1,6 @@
 import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
-
 from functions.level1_functions import click_burger_button, click_menu_item_button, click_menu_linklist_item_button
 from mobile_driver_config import driver, wait, actions
 from path_config import project_path
