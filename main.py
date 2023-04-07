@@ -83,9 +83,11 @@ def test_for_cathay():
                 # 一張卡一張卡點擊
                 card_name = driver.find_element(By.XPATH, section_xpath + "//*[@class='swiper-wrapper']//*[contains(@class, 'active')]//*[@class='cubre-m-compareCard__title']").text
                 if '停發' in card_name:
+                    card_name = card_name.replace('/', '_')
                     time.sleep(1)
-                    driver.save_screenshot('停發卡截圖/' + card_name + '.jpg')
                     stop_card_count += 1
+                    driver.find_element(By.XPATH, section_xpath + "//*[@class='swiper-wrapper']//*[contains(@class, 'active')]").screenshot('停發卡截圖/' + str(stop_card_count) + card_name + '.png')
+                    # driver.save_screenshot('停發卡截圖/' + card_name + '.jpg')
                     print(card_name)
 
     # 確認截圖數量正確
