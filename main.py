@@ -31,7 +31,7 @@ def test_for_cathay():
 
     # 點選左上角選單
     driver.find_element(By.XPATH, "//*[contains(@class, 'burger')]").click()
-    # 點擊個人金融
+    # 點擊個人金融 # todo: 點了會回到首頁，bug?
     # driver.find_element(By.XPATH, "//*[contains(@class, 'channel')]//a[contains(text(), '個人金融')]").click()
     # 點擊產品介紹
     driver.find_element(By.XPATH, "//*[contains(@class, 'menu__item')]//*[text()='產品介紹']").click()
@@ -65,10 +65,6 @@ def test_for_cathay():
     for anchor_id in ok_anchor_id_list:
         driver.find_element(By.XPATH, "//*[contains(@class, 'anchor')]//*[@data-anchor-btn='" + anchor_id + "']").click()
         time.sleep(2)  # todo: wait
-        # locator = (By.XPATH, "//*[contains(@class, 'anchor')]//*[@data-anchor-btn='" + anchor_id + "' and contains(@class, 'active')]")
-        # wait.until(expected_conditions.presence_of_element_located(locator))
-        # locator = (By.XPATH, "//section[@data-anchor-block='" + anchor_id + "']")
-        # wait.until(expected_conditions.visibility_of_element_located(locator))
         # 將section移到畫面上方
         section_xpath = "//section[@data-anchor-block='" + anchor_id + "']"
         scroll_down_until_element_visible_top(section_xpath)
@@ -86,7 +82,7 @@ def test_for_cathay():
                     card_name = card_name.replace('/', '_')
                     time.sleep(1)
                     stop_card_count += 1
-                    driver.find_element(By.XPATH, section_xpath + "//*[@class='swiper-wrapper']//*[contains(@class, 'active')]").screenshot('停發卡截圖/' + str(stop_card_count) + card_name + '.png')
+                    driver.save_screenshot('停發卡截圖/' + str(stop_card_count) + card_name + '.png')
 
     # 確認截圖數量正確
     print(stop_card_count)
