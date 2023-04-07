@@ -3,7 +3,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 
-from mobile_driver_config import driver, wait
+from mobile_driver_config import driver, wait, actions
 from scroll_function import scroll_down_until_element_visible_top
 
 
@@ -40,7 +40,15 @@ def test_for_cathay():
     # 1. 找出所有anchor的id
     anchor_id_element_list = driver.find_elements(By.XPATH, "//*[contains(@class, 'anchor')]//*[contains(@data-anchor-btn, 'blockname')]")
     anchor_id_list = [anchor_id_element.get_attribute('data-anchor-btn') for anchor_id_element in anchor_id_element_list]
+    ok_anchor_id_list = list()
     for anchor_id in anchor_id_list:
+        anchor_text = driver.find_element(By.XPATH, "//*[contains(@class, 'anchor')]//*[@data-anchor-btn='" + anchor_id + "']//p").text
+        if anchor_text == '推薦卡片' or anchor_text == '熱門卡片':
+            continue
+        else:
+            ok_anchor_id_list.append(anchor_id)
+
+    for anchor_id in ok_anchor_id_list:
         print(anchor_id)
         driver.find_element(By.XPATH, "//*[contains(@class, 'anchor')]//*[@data-anchor-btn='" + anchor_id + "']").click()
         time.sleep(2)  # todo: wait
@@ -51,8 +59,17 @@ def test_for_cathay():
         # 將section移到畫面上方
         section_xpath = "//section[@data-anchor-block='" + anchor_id + "']"
         scroll_down_until_element_visible_top(section_xpath)
+        actions.move_to_element(driver.find_element(By.XPATH, section_xpath)).drag_and_drop_by_offset(driver.find_element(By.XPATH, section_xpath), 0, -50).perform()
         time.sleep(1)
-
-    # 2. 每個tab點了後，滑到最上面.
-    # 3. 點每一個slide
-    # 4. 確認當前title有沒有停發，如果有截圖
+        # 如果底下有swiper，一個一個點
+        swiper_element_list = driver.find_elements(By.XPATH, "//section[@data-anchor-block='" + anchor_id + "']//span[contains(@class, 'swiper-pagination-bullet')]")
+        # 到最前面
+        if len(swiper_element_list) > 0:
+            for swiper_element in swiper_element_list:
+                swiper_element.click()
+                time.sleep(0.5)
+                # 一張卡一張卡點擊
+                print(driver.find_element(By.XPATH, section_xpath + "//*[@class='swiper-wrapper']//*[contains(@class, 'active')]//*[@class='cubre-m-compareCard__title']").text)
+        # 2. 每個tab點了後，滑到最上面.
+        # 3. 點每一個slide
+        # 4. 確認當前title有沒有停發，如果有截圖

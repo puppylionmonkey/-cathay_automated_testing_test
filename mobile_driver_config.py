@@ -8,7 +8,7 @@ chromedriver_path = project_path + 'chromedriver.exe'
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)  # 執行完不要關閉
-emulation = {"deviceName": "iPhone 6"}
+emulation = {"deviceName": "Nexus 6P"}
 options.add_experimental_option("mobileEmulation", emulation)
 driver = webdriver.Chrome(chromedriver_path, options=options)
 wait = WebDriverWait(driver, 3)
