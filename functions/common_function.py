@@ -1,3 +1,4 @@
+import os
 import time
 from selenium.webdriver.common.by import By
 
@@ -22,3 +23,10 @@ def scroll_down_until_element_visible_top(element_xpath):  # 前台 true: 頂端
 def scroll_down_until_element_visible_bottom(element_xpath):  # 前台 false: 底端對底端
     driver.execute_script("return arguments[0].scrollIntoView(false);", driver.find_element(By.XPATH, element_xpath))
     time.sleep(1)
+
+
+def count_files(path):
+    count = 0
+    for _, _, files in os.walk(path):
+        count += len(files)
+    return count

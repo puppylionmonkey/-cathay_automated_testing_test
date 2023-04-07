@@ -1,19 +1,12 @@
-import os
 import time
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 
+from functions.level1_functions import click_burger_button, click_menu_item_button, click_menu_linklist_item_button
 from mobile_driver_config import driver, wait, actions
 from path_config import project_path
-from scroll_function import scroll_down_until_element_visible_top
-
-
-def count_files(path):
-    count = 0
-    for _, _, files in os.walk(path):
-        count += len(files)
-    return count
+from functions.common_function import scroll_down_until_element_visible_top, count_files
 
 
 def test_for_cathay():
@@ -28,24 +21,23 @@ def test_for_cathay():
     wait.until(expected_conditions.visibility_of_element_located(locator))
     # 截圖
     driver.save_screenshot('homepage.jpg')
-
+    #############################################################################################################################################
     # 點選左上角選單
-    driver.find_element(By.XPATH, "//*[contains(@class, 'burger')]").click()
+    click_burger_button()
     # 點擊個人金融 # todo: 點了會回到首頁，bug?
     # driver.find_element(By.XPATH, "//*[contains(@class, 'channel')]//a[contains(text(), '個人金融')]").click()
     # 點擊產品介紹
-    driver.find_element(By.XPATH, "//*[contains(@class, 'menu__item')]//*[text()='產品介紹']").click()
+    click_menu_item_button('產品介紹')
     # 點擊信用卡
     credit_card_menu_xpath = "//*[contains(@class, 'menuLinkList__item')]//*[text()='信用卡' and contains(@class, 'menuSortBtn')"
-    driver.find_element(By.XPATH, credit_card_menu_xpath + " and not(contains(@class, 'mbOnly'))]").click()
+    click_menu_linklist_item_button('信用卡')
     # 計算信用卡下面的項目數量
     credit_card_item_count = len(driver.find_elements(By.XPATH, credit_card_menu_xpath + " and contains(@class, 'mbOnly')]/parent::*//a"))
     print(credit_card_item_count)
-
+    #############################################################################################################################################
+    # 停發卡截圖
     # 點擊卡片介紹
     driver.find_element(By.XPATH, credit_card_menu_xpath + " and contains(@class, 'mbOnly')]/parent::*//a[text()='卡片介紹']").click()
-
-    # 停發卡截圖
     # 找出所有anchor的id
     anchor_id_element_list = driver.find_elements(By.XPATH, "//*[contains(@class, 'anchor')]//*[contains(@data-anchor-btn, 'blockname')]")
     anchor_id_list = [anchor_id_element.get_attribute('data-anchor-btn') for anchor_id_element in anchor_id_element_list]
